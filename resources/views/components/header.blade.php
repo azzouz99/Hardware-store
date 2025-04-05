@@ -1,4 +1,4 @@
-<div x-data="{ menuOpen: false }">
+<div x-data='{"menuOpen": false, "categories": @json($categories ?? [])}'>
   <!-- Main Header -->
   <header class="bg-white shadow px-4 py-4 flex justify-between items-center">
     <!-- Left: Burger Icon and Logo -->
@@ -45,45 +45,41 @@
     <!-- Sidebar Container -->
     <div class="relative z-10 w-64 bg-white shadow-lg overflow-y-auto">
       <!-- Dynamic Nested Menu -->
-      <div x-data="menuData()">
-        <ul class="divide-y divide-gray-200">
-          <template x-for="(cat, catIndex) in categories" :key="catIndex">
-            <li>
-              <!-- Category Button with Icon -->
-              <button @click="cat.open = !cat.open" 
-                      class="w-full text-left p-4 flex justify-between items-center">
-                <div class="flex items-center space-x-2">
-                  <!-- Category Icon -->
-                  <img :src="cat.icon" alt="Category Icon" class="w-8 h-8">
-                  <!-- Category Name -->
-                  <span x-text="cat.name"></span>
-                </div>
-                <span x-text="cat.open ? '-' : '+'"></span>
-              </button>
-              <!-- Subcategories List -->
-              <ul x-show="cat.open" class="pl-4" x-collapse>
-                <template x-for="(sub, subIndex) in cat.subcategories" :key="subIndex">
-                  <li>
-                    <button @click="sub.open = !sub.open"
-                            class="w-full text-left p-2 flex justify-between items-center">
-                      <span class="text-[#d4af37] font-bold" x-text="sub.name"></span>
-                      <span class="text-[#d4af37] font-bold" x-text="sub.open ? '-' : '+'"></span>
-                    </button>
-                    <!-- Sub‑Subcategories List -->
-                    <ul x-show="sub.open" class="pl-4" x-collapse>
-                      <template x-for="(subsub, subsubIndex) in sub.subsubcategories" :key="subsubIndex">
-                        <li class="p-2">
-                          <a href="#" class="block hover:text-[#d4af37]" x-text="subsub"></a>
-                        </li>
-                      </template>
-                    </ul>
-                  </li>
-                </template>
-              </ul>
-            </li>
-          </template>
-        </ul>
-      </div>
+      <ul class="divide-y divide-gray-200">
+        <template x-for="(cat, catIndex) in categories" :key="catIndex">
+          <li>
+            <!-- Category Button with Icon -->
+            <button @click="cat.open = !cat.open" class="w-full text-left p-4 flex justify-between items-center">
+              <div class="flex items-center space-x-2">
+                <!-- Category Icon -->
+                <img :src="cat.icon" alt="Category Icon" class="w-8 h-8">
+                <!-- Category Name -->
+                <span x-text="cat.name"></span>
+              </div>
+              <span x-text="cat.open ? '-' : '+'"></span>
+            </button>
+            <!-- Subcategories List -->
+            <ul x-show="cat.open" class="pl-4" x-collapse>
+              <template x-for="(sub, subIndex) in cat.subcategories" :key="subIndex">
+                <li>
+                  <button @click="sub.open = !sub.open" class="w-full text-left p-2 flex justify-between items-center">
+                    <span class="text-[#d4af37] font-bold" x-text="sub.name"></span>
+                    <span class="text-[#d4af37] font-bold" x-text="sub.open ? '-' : '+'"></span>
+                  </button>
+                  <!-- Sub‑Subcategories List -->
+                  <ul x-show="sub.open" class="pl-4" x-collapse>
+                    <template x-for="(subsub, subsubIndex) in sub.subsubcategories" :key="subsubIndex">
+                      <li class="p-2">
+                        <a href="#" class="block hover:text-[#d4af37]" x-text="subsub.name"></a>
+                      </li>
+                    </template>
+                  </ul>
+                </li>
+              </template>
+            </ul>
+          </li>
+        </template>
+      </ul>
     </div>
   </div>
 </div>
