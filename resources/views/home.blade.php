@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<!-- <img src="/storage/products/7iUnODxKcttpiFaYf4BLCmvLSg1rUXZZ0ilU2ZDZ.jpg" alt=""> -->
 <!-- Section 1: Grid of All Categories -->
 <section class="py-12 bg-gray-100">
   <div class="container mx-auto px-4">
@@ -13,7 +14,7 @@
     <!-- Category Grid: 5 per row on large screens -->
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
       @foreach($categories as $cat)
-        <a href="{{ route('category.show', $cat->id) }}" class="block transform transition duration-300 hover:scale-95">
+        <a href="{{ route('category.index', ['category' => $cat->id]) }}" class="block transform transition duration-300 hover:scale-95">
           <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow duration-300 hover:border-[#d4af37]">
             <div class="flex justify-center pt-6">
               <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" class="w-16 h-16">
@@ -30,12 +31,24 @@
 
 <!-- Section 2: Detailed View for Each Category -->
 @foreach($categories as $category)
-  <div class="container mx-auto px-4 py-8" 
+<div class="container mx-auto px-4 py-8" 
        x-data='{ "activeSubcategory": @json($category->subcategories->first()->id ?? null) }'>
-    <!-- Category Title [#3f3f3f] -->
-    <h2 class="text-1xl font-bold text-white bg-[#3f3f3f] p-4 mb-6 uppercase">
-        {{ $category->name }}
-    </h2>
+    <!-- Category Header with Icon and "Voir tous" Link -->
+    <div class="flex items-center justify-between bg-[#3f3f3f] p-4 mb-6">
+      <!-- Category Icon and Name -->
+      <div class="flex items-center">
+        <div class="bg-white rounded-full flex items-center justify-center w-10 h-10 mr-2">
+          <img src="{{ asset($category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6">
+        </div>
+        <h2 class="text-xl font-bold text-white uppercase">
+          {{ $category->name }}
+        </h2>
+      </div>
+      <!-- "Voir tous" Link -->
+      <a href="{{ route('category.index', $category->id) }}" class="text-white hover:text-[#d4af37] font-semibold">
+        Voir tous
+      </a>
+    </div>
 
 
     <!-- Horizontal Subcategory Tabs -->
@@ -55,7 +68,7 @@
     @foreach($category->subcategories as $subcat)
         <div x-show="activeSubcategory === {{ $subcat->id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach($subcat->products as $product)
-            <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow relative">
+            <div class="bg-white border border-gray-300 rounded-lg shadow-md p-2 w-48 hover:shadow-lg transition-shadow relative">
                 <!-- Icons: Wishlist & Add to Cart -->
                 <div class="absolute top-2 right-2 flex space-x-2">
                     <!-- Wishlist (Love) Icon -->
@@ -74,11 +87,11 @@
                 </div>
 
                 <!-- Product Image -->
-                <img
-                    src="{{ asset(optional(optional($product->images)->first())->image_path ?? 'images/no-image.png') }}"
+                <img src="{{ asset($product->images && $product->images->isNotEmpty() ? $product->images->first()->image_path : 'images/no-image.png') }}"
                     alt="{{ $product->name }}"
-                    class="w-full h-40 object-cover mb-3 rounded"
-                />
+                    class="w-40 h-30 object-cover mb-3 rounded"
+                    >
+
 
                 <!-- Product Title -->
                 <h3 class="mt-1 text-sm text-gray-500">
@@ -97,7 +110,7 @@
                 @endif
 
                 <!-- Availability Status -->
-                <div class="text-sm text-right font-bold {{ $product->status == 'Disponible' ? 'text-green-600' : 'text-blue-600' }}">
+                <div class="text-sm text-right {{ $product->status == 'Disponible' ? 'text-green-600' : 'text-blue-600' }}">
                     {{ $product->status }}
                 </div>
             </div>

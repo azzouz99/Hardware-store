@@ -21,12 +21,12 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
 });
-
 Route::get('/home', [MenuController::class, 'index']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('products',ProductController::class);
 });
 
-Route::get('/category/{category}', [CategoryController::class, 'show'])->name('category.show');
+Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category.index');
+
 require __DIR__.'/auth.php';

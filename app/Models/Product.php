@@ -8,7 +8,7 @@ class Product extends Model
     protected $fillable = [
         'name',
         'unite',
-        
+        'description',
         'reference',
         'quantity',
         'status',
@@ -21,7 +21,7 @@ class Product extends Model
 
     public function subsubCategory()
     {
-        return $this->belongsTo(SubsubCategory::class);
+        return $this->belongsTo(\App\Models\SubsubCategory::class, 'subsub_category_id');
     }
     public function images()
     {

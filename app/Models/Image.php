@@ -11,7 +11,6 @@ class Image extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'image_product')
-                    ->withPivot('sort_order')
                     ->withTimestamps();
     }
 }

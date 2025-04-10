@@ -12,6 +12,11 @@
             <label for="name" class="block font-medium">Name:</label>
             <input type="text" name="name" id="name" class="w-full border p-2" required>
         </div>
+        <!-- Description  -->
+        <div class="mb-4">
+            <label for="description" class="block font-medium">Description:</label>
+            <textarea name="description" id="description" rows="4" class="w-full border p-2" placeholder="Enter product description"></textarea>
+        </div>
 
         <!-- Unit -->
         <div class="mb-4">
@@ -21,7 +26,7 @@
         <!-- Price Field -->
         <div class="mb-4">
             <label for="price" class="block font-medium">Price (DT):</label>
-            <input type="number" step="0.01" name="price" id="price" class="w-full border p-2" required>
+            <input type="number" step="0.001" name="price" id="price" class="w-full border p-2" required>
         </div>
         <!-- Reference -->
         <div class="mb-4">
@@ -56,7 +61,7 @@
         <!-- Promotion Value -->
         <div class="mb-4">
             <label for="promotion_value" class="block font-medium">Promotion Percentage:</label>
-            <input type="number" name="promotion_value" id="promotion_value" class="w-full border p-2" value="0">
+            <input type="number" step="0.01" name="promotion_value" id="promotion_value" class="w-full border p-2" value="0">
         </div>
 
         <!-- Dependent Dropdowns for Sub-Subcategory Selection -->
