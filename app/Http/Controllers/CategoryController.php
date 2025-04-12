@@ -36,66 +36,25 @@ class CategoryController extends Controller
 
 public function index(Category $category, Request $request)
 {
-  
-
     // Use the already-bound Category model.
     $subcategories = $category->subcategories;
 
-    $query = Product::query();
-
-    // Apply filters if a subcategory is provided.
-    if ($request->has('subcategory')) {
-        $subcategoryId = $request->get('subcategory');
-        $query->whereHas('subsubCategory', function ($q) use ($subcategoryId) {
-            $q->where('subcategory_id', $subcategoryId);
-        });
-    }
-
-    // Filter by search term.
-    if ($request->filled('search')) {
-        $query->where('name', 'LIKE', '%' . $request->search . '%');
-    }
-
-    // Apply sorting.
-    if ($request->filled('sort')) {
-        switch ($request->sort) {
-            case 'prix-asc':
-                $query->orderBy('price', 'asc');
-                break;
-            case 'prix-desc':
-                $query->orderBy('price', 'desc');
-                break;
-            case 'pertinence':
-            default:
-                $query->orderBy('created_at', 'desc');
-                break;
-        }
-    } else {
-        $query->orderBy('created_at', 'desc');
-    }
-
-    // Apply price filtering before pagination.
+    // Set defaults for price filtering; you'll pass these along.
     $minPrice = $request->get('minPrice', 7);
     $maxPrice = $request->get('maxPrice', 396);
-    $query->whereBetween('price', [$minPrice, $maxPrice]);
-
-    // Paginate results.
-    $perPage = $request->get('perPage', 27);
-    $products = $query->paginate($perPage);
-
-    // Total product count for the header.
-    $totalProducts = $products->total();
-
-    return view('category.index', compact(
-        'category',
-        'subcategories',
-        'products',
-        'minPrice',
-        'maxPrice',
-        'perPage',
-        'totalProducts'
-    ));
+    
+    // Optionally, if you want to display an initial product count,
+    // you can run a query like the one you had earlier:
+    $totalProducts = Product::whereHas('subsubCategory', function ($q) use ($category) {
+        $q->whereHas('subcategory', function ($q2) use ($category) {
+            $q2->where('category_id', $category->id);
+        });
+    })->count();
+    
+    // Pass necessary context to the view.
+    return view('category.index', compact('category', 'subcategories', 'minPrice', 'maxPrice', 'totalProducts'));
 }
+
 
 
 

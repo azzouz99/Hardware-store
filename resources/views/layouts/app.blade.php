@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Nouichi Store</title>
-    
+    @livewireStyles
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-    @vite(['resources/css/app.css', 'resources/js/app.js']) {{-- If using Laravel Breeze --}}
+ 
+   
+    @vite(['resources/css/app.css']) <!-- CSS only here -->
+    
 </head>
 <body class="bg-gray-100 text-gray-900">
 
@@ -19,6 +20,7 @@
     {{-- 📦 Page Content --}}
     <main class="container mx-auto p-6">
         @yield('content')
+        
     </main>
 
     {{-- 🔽 Footer --}}
@@ -30,10 +32,10 @@
 
 <!-- Bootstrap JS (with Popper) -->
 
-<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 
+@livewireScripts
+@vite(['resources/js/app.js']) 
 
-</script>
 </body>
 </html>

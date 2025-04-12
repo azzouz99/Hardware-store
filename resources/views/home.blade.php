@@ -102,8 +102,8 @@
                 <!-- Price Section -->
                 @if($product->promotion)
                     <div>
-                        <div class="text-red-400 line-through">{{ $product->original_price }} DT</div>
-                        <div class="text-green-500 font-bold">{{ $product->discounted_price }} DT</div>
+                        <div class="text-red-400 line-through">{{ $product->price }} DT</div>
+                        <div class="text-green-500 font-bold">{{ $product->price }} DT</div>
                     </div>
                 @else
                     <div class="text-black-500 font-bold">{{ $product->price }} DT</div>

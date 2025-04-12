@@ -15,7 +15,6 @@ class ProductController extends Controller
 
     public function create()
     {
-        // Fetch all sub‑subcategories (you can customize this query as needed)
         $categories = Category::with('subcategories.subsubcategories')->get();
         return view('admin.products.create', compact('categories'));
     }
