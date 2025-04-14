@@ -71,6 +71,11 @@
   <div wire:loading.remove class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     @forelse($products as $product)
       <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow relative group">
+      @if($product->promotion)
+          <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+              PROMO
+          </div>
+      @endif
         <!-- Wishlist & Cart Icons -->
         <div class="absolute top-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
           <button class="p-1.5 bg-white rounded-full shadow text-gray-500 hover:text-[#d4af37] hover:bg-gray-50">

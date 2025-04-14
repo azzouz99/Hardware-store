@@ -28,47 +28,128 @@
     </div>
   </div>
 </section>
+<!-- Promotion section -->
+
+<div class="container mx-auto px-4 py-8" >
+    <!-- Category Header with Icon and "Voir tous" Link -->
+    <div class="relative bg-gradient-to-r from-[#6a0a0a] to-[#8B0000] p-3 md:p-5 mb-6 md:mb-8 rounded-lg md:rounded-xl shadow-lg md:shadow-2xl overflow-hidden">
+      <!-- Decorative elements -->
+      <div class="absolute inset-0 opacity-20" style="
+        background-image: radial-gradient(circle at 25% 50%, white 0.5px, transparent 1px);
+        background-size: 10px 10px;
+      "></div>
+      
+      <div class="absolute right-0 top-0 h-full w-16 md:w-24 bg-gradient-to-l from-[#d4af37]/10 to-transparent"></div>
+      
+      <!-- Main content -->
+      <div class="relative z-10 flex items-center justify-between">
+        <!-- Title with accent -->
+        <div class="flex items-center space-x-2 md:space-x-4">
+          <div class="h-8 w-0.5 md:h-10 md:w-1 bg-[#d4af37] rounded-full"></div>
+          <h2 class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight md:tracking-wider">
+            <span class="text-[#d4af37]">NOS</span> ARTICLES EN PROMO
+          </h2>
+        </div>
+        
+        <!-- "Voir tous" button with gold accent -->
+        <a href="{{ route('category.index', $category->id) }}" 
+          class="flex items-center space-x-1 group transition-all duration-300">
+          <span class="text-white group-hover:text-[#d4af37] font-medium text-base md:text-lg transition-colors">
+            Voir tous
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-white group-hover:text-[#d4af37] group-hover:translate-x-1 transition-all" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
+      </div>
+      
+      <!-- Bottom accent -->
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 md:h-1 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
+    </div>
+
+</div>
 
 <!-- Section 2: Detailed View for Each Category -->
 @foreach($categories as $category)
 <div class="container mx-auto px-4 py-8" 
        x-data='{ "activeSubcategory": @json($category->subcategories->first()->id ?? null) }'>
     <!-- Category Header with Icon and "Voir tous" Link -->
-    <div class="flex items-center justify-between bg-[#3f3f3f] p-4 mb-6">
-      <!-- Category Icon and Name -->
-      <div class="flex items-center">
-        <div class="bg-white rounded-full flex items-center justify-center w-10 h-10 mr-2">
-          <img src="{{ asset($category->icon) }}" alt="{{ $category->name }}" class="w-6 h-6">
+    <div class="relative bg-gradient-to-r from-[#2d2d2d] to-[#3f3f3f] p-3 md:p-5 mb-6 md:mb-8 rounded-lg md:rounded-xl shadow-lg md:shadow-2xl overflow-hidden">
+      <!-- Decorative elements -->
+      <div class="absolute inset-0 opacity-20" style="
+        background-image: radial-gradient(circle at 25% 50%, white 0.5px, transparent 1px);
+        background-size: 15px 15px;
+      "></div>
+      
+      <div class="absolute right-0 top-0 h-full w-16 md:w-24 bg-gradient-to-l from-[#d4af37]/10 to-transparent"></div>
+      
+      <!-- Main content -->
+      <div class="relative z-10 flex items-center justify-between">
+        <!-- Category icon and name with accent -->
+        <div class="flex items-center space-x-2 md:space-x-4">
+          <div class="bg-white rounded-full flex items-center justify-center w-8 h-8 md:w-10 md:h-10 mr-1 md:mr-2">
+            <img src="{{ asset($category->icon) }}" alt="{{ $category->name }}" class="w-4 h-4 md:w-6 md:h-6">
+          </div>
+          <h2 class="text-lg md:text-2xl font-bold text-white uppercase tracking-tight md:tracking-wider">
+            <span class="text-[#d4af37]">{{ strtok($category->name, ' ') }}</span> 
+            {{ substr(strstr($category->name, ' '), 1) }}
+          </h2>
         </div>
-        <h2 class="text-xl font-bold text-white uppercase">
-          {{ $category->name }}
-        </h2>
+        
+        <!-- "Voir tous" button with gold accent -->
+        <a href="{{ route('category.index', $category->id) }}" 
+          class="flex items-center space-x-1 group transition-all duration-300">
+          <span class="text-white group-hover:text-[#d4af37] font-medium text-sm md:text-lg transition-colors">
+            Voir tous
+          </span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 md:h-5 md:w-5 text-white group-hover:text-[#d4af37] group-hover:translate-x-1 transition-all" 
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </a>
       </div>
-      <!-- "Voir tous" Link -->
-      <a href="{{ route('category.index', $category->id) }}" class="text-white hover:text-[#d4af37] font-semibold">
-        Voir tous
-      </a>
+      
+      <!-- Bottom accent -->
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 md:h-1 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
     </div>
 
 
     <!-- Horizontal Subcategory Tabs -->
-    <div class="flex space-x-4 border-b border-gray-300 mb-6 overflow-x-auto">
-        @foreach($category->subcategories as $subcat)
+    <div class="relative mb-6 sm:mb-8 px-2 sm:px-4">
+      <!-- Scrolling container with subtle gradient fade -->
+      <div class="relative overflow-x-auto pb-2">
+        <div class="flex space-x-1 md:space-x-2 w-max min-w-full">
+          @foreach($category->subcategories as $subcat)
             <button
-                @click="activeSubcategory = {{ $subcat->id }}"
-                class="px-3 py-2 focus:outline-none text-gray-600 transition-colors"
-                :class="activeSubcategory === {{ $subcat->id }} ? 'border-b-2 border-[#d4af37] text-[#d4af37]' : 'hover:text-[#d4af37]'"
+              @click="activeSubcategory = {{ $subcat->id }}"
+              class="px-4 py-2.5 rounded-lg focus:outline-none transition-all duration-200 whitespace-nowrap text-sm"
+              :class="{
+                'bg-[#d4af37] text-white shadow-md': activeSubcategory === {{ $subcat->id }},
+                'bg-white/10 text-black-200 hover:bg-white/20': activeSubcategory !== {{ $subcat->id }}
+              }"
             >
-                {{ $subcat->name }}
+              {{ $subcat->name }}
             </button>
-        @endforeach
+          @endforeach
+        </div>
+      </div>
+      
+      <!-- Bottom accent line that matches category header -->
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
     </div>
+
 
     <!-- Products for Each Subcategory -->
     @foreach($category->subcategories as $subcat)
         <div x-show="activeSubcategory === {{ $subcat->id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             @foreach($subcat->products as $product)
             <div class="bg-white border border-gray-300 rounded-lg shadow-md p-2 w-48 hover:shadow-lg transition-shadow relative">
+            @if($product->promotion)
+                <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                    PROMO
+                </div>
+            @endif
                 <!-- Icons: Wishlist & Add to Cart -->
                 <div class="absolute top-2 right-2 flex space-x-2">
                     <!-- Wishlist (Love) Icon -->
@@ -103,7 +184,7 @@
                 @if($product->promotion)
                     <div>
                         <div class="text-red-400 line-through">{{ $product->price }} DT</div>
-                        <div class="text-green-500 font-bold">{{ $product->price }} DT</div>
+                        <div class="text-black-500 font-bold">{{ $product->price }} DT</div>
                     </div>
                 @else
                     <div class="text-black-500 font-bold">{{ $product->price }} DT</div>
