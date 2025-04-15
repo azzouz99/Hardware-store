@@ -27,6 +27,11 @@ class Product extends Model
     {
         return $this->belongsToMany(Image::class, 'image_product')->withTimestamps();
     }
+    public function scopePromoted($query)
+    {
+        return $query->where('promotion', true)
+                    ->with('images'); // Eager load images
+    }
 }
 
 

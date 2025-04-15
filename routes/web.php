@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/home', [MenuController::class, 'index']);
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::prefix('admin')->middleware(['auth'])->group(function () {
+    
     Route::resource('products',ProductController::class);
 });
 

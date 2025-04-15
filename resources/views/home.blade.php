@@ -68,7 +68,59 @@
       <div class="absolute bottom-0 left-0 right-0 h-0.5 md:h-1 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
     </div>
 
-</div>
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6 px-4 md:px-0">
+      @foreach($promotedProducts as $product)
+      <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 relative group overflow-hidden">
+          <!-- PROMO Badge -->
+          @if($product->promotion)
+          <div class="absolute top-3 left-3 bg-red-600 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md z-10">
+              PROMO
+          </div>
+          @endif
+
+          <!-- Action Buttons -->
+          <div class="absolute top-3 right-3 flex flex-col space-y-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+              <button class="p-2 bg-white rounded-full shadow-md text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                  <i class="fa fa-heart"></i>
+              </button>
+              <button class="p-2 bg-white rounded-full shadow-md text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                  <i class="fa fa-shopping-cart"></i>
+              </button>
+          </div>
+
+          <!-- Product Image -->
+          <div class="w-full aspect-square overflow-hidden bg-gray-100">
+              <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                  alt="{{ $product->name }}"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+          </div>
+
+          <!-- Product Info -->
+          <div class="p-3">
+              <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2">
+                  {{ $product->name }}
+              </h3>
+
+              <!-- Price -->
+              <div class="flex items-center justify-between mt-2">
+                  @if($product->promotion)
+                      <div class="flex flex-col">
+                      <span class="text-sm text-red-500 line-through">{{ $product->price }} DT</span>
+                      <span class="text-lg font-bold text-black">{{ $product->price }} DT</span>
+                      </div>
+                  @else
+                      <span class="text-lg font-bold text-[#d4af37]">{{ $product->price }} DT</span>
+                  @endif
+
+                  <span class="text-xs px-2 py-1 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                      {{ $product->status }}
+                  </span>
+              </div>
+          </div>
+      </div>
+      @endforeach
+  </div>
+  </div>
 
 <!-- Section 2: Detailed View for Each Category -->
 @foreach($categories as $category)
@@ -138,69 +190,130 @@
       <!-- Bottom accent line that matches category header -->
       <div class="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
     </div>
-
-
+    
+   
     <!-- Products for Each Subcategory -->
     @foreach($category->subcategories as $subcat)
-        <div x-show="activeSubcategory === {{ $subcat->id }}" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @foreach($subcat->products as $product)
-            <div class="bg-white border border-gray-300 rounded-lg shadow-md p-2 w-48 hover:shadow-lg transition-shadow relative">
-            @if($product->promotion)
-                <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+    <div 
+    x-show="activeSubcategory === {{ $subcat->id }}" 
+    x-data="{
+        startIndex: 1,
+        visibleCount: 0,
+        total: {{ $subcat->products->count() }},
+        cardWidth: 200, // Smaller base card width
+        updateScroll() {
+            const container = this.$refs.scrollContainer;
+            const cards = container.querySelectorAll('.product-card');
+            const containerRect = container.getBoundingClientRect();
+            let firstVisible = null;
+            let lastVisible = null;
+
+            cards.forEach((card, index) => {
+                const cardRect = card.getBoundingClientRect();
+                if (cardRect.right > containerRect.left && cardRect.left < containerRect.right) {
+                    if (firstVisible === null) firstVisible = index + 1;
+                    lastVisible = index + 1;
+                }
+            });
+
+            this.startIndex = firstVisible || 1;
+            this.visibleCount = lastVisible || 0;
+            this.cardWidth = cards[0]?.getBoundingClientRect().width + 16 || 200; // card width + gap
+        },
+        scrollLeft() {
+            this.$refs.scrollContainer.scrollBy({ left: -this.cardWidth, behavior: 'smooth' });
+        },
+        scrollRight() {
+            this.$refs.scrollContainer.scrollBy({ left: this.cardWidth, behavior: 'smooth' });
+        }
+    }"
+    x-init="updateScroll()"
+    @resize.window.debounce.100="updateScroll()"
+    class="relative"
+>
+    <!-- Navigation Arrows -->
+    <button 
+        @click="scrollLeft()" 
+        x-show="startIndex > 1"
+        class="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition-all"
+    >
+        <i class="fa fa-chevron-left text-gray-600 text-sm"></i>
+    </button>
+
+    <button 
+        @click="scrollRight()" 
+        x-show="visibleCount < total"
+        class="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white p-2 rounded-full shadow hover:bg-gray-100 transition-all"
+    >
+        <i class="fa fa-chevron-right text-gray-600 text-sm"></i>
+    </button>
+
+    <!-- Scrollable Container -->
+    <div 
+        x-ref="scrollContainer"
+        class="flex overflow-x-auto gap-3 px-3 py-2 scrollbar-hide scroll-smooth snap-x snap-mandatory"
+        @scroll.debounce.100ms="updateScroll"
+    >
+        @foreach($subcat->products as $product)
+        <div class="product-card snap-start flex-shrink-0 w-40 sm:w-48 md:w-56"> <!-- Smaller responsive widths -->
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 relative group overflow-hidden h-full">
+                <!-- PROMO Badge (smaller) -->
+                @if($product->promotion)
+                <div class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
                     PROMO
                 </div>
-            @endif
-                <!-- Icons: Wishlist & Add to Cart -->
-                <div class="absolute top-2 right-2 flex space-x-2">
-                    <!-- Wishlist (Love) Icon -->
-                    <a href="#"
-                    class="p-2 text-gray-500 hover:text-[#d4af37] transition"
-                    title="Add to Wishlist">
-                    <i class="fa fa-heart"></i>
-                    </a>
+                @endif
 
-                    <!-- Add to Cart Icon -->
-                    <a href="#"
-                    class="p-2 text-gray-500 hover:text-[#d4af37] transition"
-                    title="Add to Cart">
-                    <i class="fa fa-shopping-cart"></i>
-                    </a>
+                <!-- Action Buttons (smaller) -->
+                <div class="absolute top-2 right-2 flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                        <i class="fa fa-heart text-xs"></i>
+                    </button>
+                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                        <i class="fa fa-shopping-cart text-xs"></i>
+                    </button>
                 </div>
 
                 <!-- Product Image -->
-                <img src="{{ asset($product->images && $product->images->isNotEmpty() ? $product->images->first()->image_path : 'images/no-image.png') }}"
-                    alt="{{ $product->name }}"
-                    class="w-40 h-30 object-cover mb-3 rounded"
-                    >
+                <div class="w-full aspect-square overflow-hidden bg-gray-100">
+                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                        alt="{{ $product->name }}"
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                </div>
 
+                <!-- Product Info (adjusted for smaller size) -->
+                <div class="p-2">
+                    <h3 class="text-xs font-medium text-gray-800 mb-1 line-clamp-2">
+                        {{ $product->name }}
+                    </h3>
 
-                <!-- Product Title -->
-                <h3 class="mt-1 text-sm text-gray-500">
-                    {{ $product->name }}
-                </h3>
+                    <!-- Price -->
+                    <div class="flex items-center justify-between mt-1">
+                        @if($product->promotion)
+                            <div class="flex flex-col">
+                               
+                                <span class="text-[10px] text-red-500 line-through">{{ $product->price }} DT</span>
+                                <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
+                            </div>
+                        @else
+                            <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
+                        @endif
 
-                <div class="flex justify-between items-center mt-1">
-                <!-- Price Section -->
-                @if($product->promotion)
-                    <div>
-                        <div class="text-red-400 line-through">{{ $product->price }} DT</div>
-                        <div class="text-black-500 font-bold">{{ $product->price }} DT</div>
+                        <span class="text-[10px] px-1.5 py-0.5 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                            {{ $product->status }}
+                        </span>
                     </div>
-                @else
-                    <div class="text-black-500 font-bold">{{ $product->price }} DT</div>
-                @endif
-
-                <!-- Availability Status -->
-                <div class="text-sm text-right {{ $product->status == 'Disponible' ? 'text-green-600' : 'text-blue-600' }}">
-                    {{ $product->status }}
                 </div>
             </div>
-
-
-            </div>
-
-            @endforeach
         </div>
+        @endforeach
+    </div>
+
+    <!-- Product Range Indicator -->
+    <div class="text-center text-xs text-gray-500 mt-1" x-show="total > 0">
+        <span x-text="`${startIndex}-${visibleCount} of ${total}`"></span>
+    </div>
+</div>
     @endforeach
   </div>
 @endforeach
