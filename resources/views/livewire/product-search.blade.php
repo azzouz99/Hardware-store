@@ -27,6 +27,7 @@
           <span class="text-sm font-medium text-gray-600 mx-2">Afficher:</span>
           <select wire:model.live="perPage" 
                   class="appearance-none bg-white border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:border-[#d4af37] transition-all">
+            <option value="8">8</option>
             <option value="12">12</option>
             <option value="27">27</option>
             <option value="48">48</option>
@@ -70,51 +71,57 @@
   <!-- Product Cards Grid -->
   <div wire:loading.remove class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     @forelse($products as $product)
-      <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow relative group">
-      @if($product->promotion)
-          <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
-              PROMO
-          </div>
-      @endif
-        <!-- Wishlist & Cart Icons -->
-        <div class="absolute top-3 right-3 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button class="p-1.5 bg-white rounded-full shadow text-gray-500 hover:text-[#d4af37] hover:bg-gray-50">
-            <i class="fa fa-heart text-sm"></i>
-          </button>
-          <button class="p-1.5 bg-white rounded-full shadow text-gray-500 hover:text-[#d4af37] hover:bg-gray-50">
-            <i class="fa fa-shopping-cart text-sm"></i>
-          </button>
+    <div class="product-card snap-start flex-shrink-0 w-40 sm:w-48 md:w-56"> <!-- Smaller responsive widths -->
+            <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 relative group overflow-hidden h-full flex flex-col">
+                <!-- PROMO Badge (smaller) -->
+                @if($product->promotion)
+                <div class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
+                    PROMO
+                </div>
+                @endif
+
+                <!-- Action Buttons (smaller) -->
+                <div class="absolute top-2 right-2 flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                        <i class="fa fa-heart text-xs"></i>
+                    </button>
+                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                        <i class="fa fa-shopping-cart text-xs"></i>
+                    </button>
+                </div>
+
+                <!-- Product Image -->
+                <div class="w-full aspect-square overflow-hidden bg-gray-100">
+                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                        alt="{{ $product->name }}"
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                </div>
+
+                <!-- Product Info (adjusted for smaller size) -->
+                <div class="p-2 flex flex-col flex-grow">
+                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
+                        {{ $product->name }}
+                    </h3>
+
+                    <!-- Price -->
+                    <div class="flex items-center justify-between mt-2">
+                        @if($product->promotion)
+                            <div class="flex flex-col">
+                               
+                                <span class="text-[10px] text-red-500 line-through">{{ $product->price }} DT</span>
+                                <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
+                            </div>
+                        @else
+                            <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
+                        @endif
+
+                        <span class="text-xs px-2 py-1 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                            {{ $product->status }}
+                        </span>
+                    </div>
+                </div>
+            </div>
         </div>
-        
-        <!-- Product Image -->
-        <div class="w-full h-48 overflow-hidden mb-3 rounded-lg bg-gray-100">
-        <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}"
-         alt="{{ $product->name }}"
-         class="w-full h-full object-cover">
-      </div>
-              
-        <!-- Product Info -->
-        <div class="pt-1">
-          <h3 class="text-gray-800 line-clamp-2 mb-1">{{ $product->name }}</h3>
-          
-          <!-- Price -->
-          <div class="flex items-center justify-between mt-2">
-            @if($product->promotion)
-            <div class="flex flex-col">
-            <span class="text-sm text-red-500 line-through">{{ $product->price }} DT</span>
-              <span class="text-black-600 ">{{ $product->price }} DT</span>
-              
-          </div>
-            @else
-              <span class="text-black-600 ">{{ $product->price }} DT</span>
-            @endif
-            
-            <span class="text-xs px-2 py-1 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-              {{ $product->status }}
-            </span>
-          </div>
-        </div>
-      </div>
     @empty
       <div class="col-span-full py-12 text-center">
         <div class="text-gray-400 mb-2">

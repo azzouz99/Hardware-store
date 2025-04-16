@@ -108,7 +108,7 @@ class CreateProduct extends Component
                 foreach ($this->images as $image) {
                     $path = $image->store('products', 'public');
                     $imageRecord = Image::create([
-                        'image_path' => 'D/storage/' . $path, // Match your original controller's path
+                        'image_path' => '/storage/' . $path, // Match your original controller's path
                     ]);
                     $product->images()->attach($imageRecord->id);
                     Log::info("Attached image {$imageRecord->id} to product {$product->id}");
