@@ -3,41 +3,10 @@
 namespace App\Livewire;
 
 use Livewire\Component;
-use App\Models\Product;
 
-class Cart extends Component
+class CartDropdown extends Component
 {
-    protected $listeners = ['add-to-cart' => 'add', 'cart-updated' => '$refresh'];
-
-    public function add($productId, $quantity = 1)
-    {
-        $product = Product::findOrFail($productId);
-        
-        // Initialize cart in session if not exists
-        $cart = session()->get('cart', []);
-        
-        // Add or update product in cart
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity'] += $quantity;
-        } else {
-            $cart[$productId] = [
-                'id' => $product->id,
-                'name' => $product->name,
-                'price' => $product->price,
-                'quantity' => $quantity,
-                'image' => $product->images->first()?->image_path,
-            ];
-        }
-        
-        // Save cart to session
-        session()->put('cart', $cart);
-        
-        // Emit event to update cart counter and dropdown
-        $this->dispatch('cart-updated');
-        
-        // Flash success message
-        session()->flash('message', 'Product added to cart!');
-    }
+    protected $listeners = ['cart-updated' => '$refresh'];
 
     public function incrementQuantity($productId)
     {
@@ -63,7 +32,7 @@ class Cart extends Component
     {
         $cart = session()->get('cart', []);
         if (isset($cart[$productId])) {
-            $quantity = max(1, intval($quantity)); // Ensure quantity is at least 1
+            $quantity = max(1, intval($quantity));
             $cart[$productId]['quantity'] = $quantity;
             session()->put('cart', $cart);
             $this->dispatch('cart-updated');
@@ -78,6 +47,12 @@ class Cart extends Component
             session()->put('cart', $cart);
             $this->dispatch('cart-updated');
         }
+    }
+
+    public function clearCart()
+    {
+        session()->forget('cart');
+        $this->dispatch('cart-updated');
     }
 
     public function getCartItems()
@@ -98,7 +73,6 @@ class Cart extends Component
 
     public function getShippingCost()
     {
-        // You can implement your shipping cost logic here
         return 0;
     }
 
@@ -107,21 +81,8 @@ class Cart extends Component
         return $this->getCartSubtotal() + $this->getShippingCost();
     }
 
-    public function clearCart()
-    {
-        session()->forget('cart');
-        $this->dispatch('cart-updated');
-    }
-
-    public function getCartCount()
-    {
-        $cart = session()->get('cart', []);
-        return array_sum(array_column($cart, 'quantity'));
-    }
-
     public function render()
     {
-        return view('livewire.cart');
+        return view('livewire.cart-dropdown');
     }
 }
-?>

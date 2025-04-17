@@ -1,4 +1,4 @@
-<div x-data='{"menuOpen": false, "categories": @json($categories ?? [])}'>
+<div x-data='{"menuOpen": false, "cartOpen": false, "categories": @json($categories ?? [])}' @click.outside="cartOpen = false">
   <!-- Main Header -->
   <header class="bg-white shadow px-4 py-4 flex justify-between items-center">
     <!-- Left: Burger Icon and Logo -->
@@ -32,9 +32,14 @@
       <a href="/wishlist" class="text-gray-600 hover:text-[#d4af37]">
         <i class="fa fa-heart fa-lg"></i>
       </a>
-      <a href="/cart" class="text-gray-600 hover:text-[#d4af37]">
-        <i class="fa fa-shopping-cart fa-lg"></i>
-      </a>
+      <div class="relative">
+        <button @click="cartOpen = !cartOpen" class="text-gray-600 hover:text-[#d4af37] focus:outline-none">
+          <livewire:cart-counter />
+        </button>
+        <div x-show="cartOpen" x-cloak x-transition>
+          <livewire:cart-dropdown />
+        </div>
+      </div>
     </div>
   </header>
 

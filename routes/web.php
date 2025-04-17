@@ -29,5 +29,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 });
 
 Route::get('/category/{category}', [CategoryController::class, 'index'])->name('category.index');
-
+Route::get('/cart', function () {
+    return view('livewire.cart');
+})->name('cart');
 require __DIR__.'/auth.php';

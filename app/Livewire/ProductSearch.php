@@ -39,6 +39,7 @@ class ProductSearch extends Component
         'minPrice' => ['except' => 0],
         'maxPrice' => ['except' => 800],
     ];
+    protected $listeners = ['add-to-cart' => 'addToCart'];
 
     public function mount($categoryId, $minPrice, $maxPrice)
     {
@@ -69,6 +70,30 @@ class ProductSearch extends Component
             $this->maxPrice = $this->minPrice;
         }
     }
+    public function addToCart($productId)
+    {
+        $product = Product::findOrFail($productId);
+    
+        $cart = session()->get('cart', []);
+    
+        if (isset($cart[$productId])) {
+            $cart[$productId]['quantity']++;
+        } else {
+            $cart[$productId] = [
+                'name' => $product->name,
+                'price' => $product->price,
+                'image' => $product->images->first()?->image_path,
+                'quantity' => 1,
+            ];
+        }
+    
+        session()->put('cart', $cart);
+    
+        // Optional: notify other components
+        $this->dispatch('cart-updated');
+    }
+    
+
 
     public function render()
     {

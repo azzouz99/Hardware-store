@@ -13,7 +13,7 @@
 <body class="bg-gray-100 text-gray-900">
 
     {{-- 🔼 Header --}}
-    <header>
+    <header class="sticky top-0 z-50 bg-white shadow">
     <x-header />
     </header>
 

@@ -1,5 +1,8 @@
 <div class="bg-white shadow-sm rounded-lg p-4 mb-6">
-  <!-- Search and Filter Bar -->
+@if(session('message'))
+    <div class="bg-green-100 text-green-700 p-2 rounded mb-4">{{ session('message') }}</div>
+@endif  
+<!-- Search and Filter Bar -->
   <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
     <!-- Left Controls - Sort and Items Per Page -->
     <div class="flex flex-col sm:flex-row gap-3 sm:items-center">
@@ -71,57 +74,57 @@
   <!-- Product Cards Grid -->
   <div wire:loading.remove class="mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
     @forelse($products as $product)
-    <div class="product-card snap-start flex-shrink-0 w-40 sm:w-48 md:w-56"> <!-- Smaller responsive widths -->
-            <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 relative group overflow-hidden h-full flex flex-col">
-                <!-- PROMO Badge (smaller) -->
-                @if($product->promotion)
-                <div class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
-                    PROMO
-                </div>
-                @endif
+    <div class="product-card snap-start flex-shrink-0 w-40 sm:w-48 md:w-56">
+        <div class="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 relative group overflow-hidden h-full flex flex-col">
+            <!-- PROMO Badge -->
+            @if($product->promotion)
+            <div class="absolute top-2 left-2 bg-red-600 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full shadow">
+                PROMO
+            </div>
+            @endif
 
-                <!-- Action Buttons (smaller) -->
-                <div class="absolute top-2 right-2 flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
-                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
-                        <i class="fa fa-heart text-xs"></i>
-                    </button>
-                    <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
-                        <i class="fa fa-shopping-cart text-xs"></i>
-                    </button>
-                </div>
+            <!-- Action Buttons -->
+            <div class="absolute top-2 right-2 flex flex-col space-y-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-10">
+                <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors">
+                    <i class="fa fa-heart text-xs"></i>
+                </button>
+                <button class="p-1.5 bg-white rounded-full shadow text-gray-600 hover:text-[#d4af37] hover:bg-gray-50 transition-colors" wire:click="addToCart({{ $product->id }})">
+                    <i class="fa fa-shopping-cart"></i>
+                </button>
 
-                <!-- Product Image -->
-                <div class="w-full aspect-square overflow-hidden bg-gray-100">
-                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
-                        alt="{{ $product->name }}"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
-                </div>
+            </div>
 
-                <!-- Product Info (adjusted for smaller size) -->
-                <div class="p-2 flex flex-col flex-grow">
-                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
-                        {{ $product->name }}
-                    </h3>
+            <!-- Product Image -->
+            <div class="w-full aspect-square overflow-hidden bg-gray-100">
+                <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                    alt="{{ $product->name }}"
+                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+            </div>
 
-                    <!-- Price -->
-                    <div class="flex items-center justify-between mt-2">
-                        @if($product->promotion)
-                            <div class="flex flex-col">
-                               
-                                <span class="text-[10px] text-red-500 line-through">{{ $product->price }} DT</span>
-                                <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
-                            </div>
-                        @else
+            <!-- Product Info -->
+            <div class="p-2 flex flex-col flex-grow">
+                <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
+                    {{ $product->name }}
+                </h3>
+
+                <!-- Price -->
+                <div class="flex items-center justify-between mt-2">
+                    @if($product->promotion)
+                        <div class="flex flex-col">
+                            <span class="text-[10px] text-red-500 line-through">{{ $product->price }} DT</span>
                             <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
-                        @endif
+                        </div>
+                    @else
+                        <span class="text-sm font-bold text-black">{{ $product->price }} DT</span>
+                    @endif
 
-                        <span class="text-xs px-2 py-1 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
-                            {{ $product->status }}
-                        </span>
-                    </div>
+                    <span class="text-xs px-2 py-1 rounded-full {{ $product->status == 'Disponible' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' }}">
+                        {{ $product->status }}
+                    </span>
                 </div>
             </div>
         </div>
+    </div>
     @empty
       <div class="col-span-full py-12 text-center">
         <div class="text-gray-400 mb-2">
