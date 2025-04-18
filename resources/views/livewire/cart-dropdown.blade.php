@@ -1,17 +1,17 @@
-<div x-data="{ open: false }" class="absolute right-0 mt-2 w-full sm:w-96 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-200" wire:poll>
+<div x-data="{ open: false }" class="fixed sm:absolute right-0 left-0 sm:left-auto top-0 sm:top-auto mt-16 sm:mt-2 mx-2 sm:mx-0 sm:w-96 bg-white border border-gray-200 rounded-xl shadow-2xl z-50 overflow-hidden transition-all duration-200 flex flex-col max-h-[90vh] sm:max-h-[80vh]" wire:poll>
     <!-- Cart Header -->
-    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200">
+    <div class="bg-gray-50 px-4 py-3 border-b border-gray-200 flex-shrink-0">
         <h3 class="text-lg font-bold text-gray-800 flex items-center">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-[#d4af37]" viewBox="0 0 20 20" fill="currentColor">
                 <path d="M3 1a1 1 0 000 2h1.22l.305 1.222a.997.997 0 00.01.042l1.358 5.43-.893.892C3.74 11.846 4.632 14 6.414 14H15a1 1 0 000-2H6.414l1-1H14a1 1 0 00.894-.553l3-6A1 1 0 0017 3H6.28l-.31-1.243A1 1 0 005 1H3zM16 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM6.5 18a1.5 1.5 0 100-3 1.5 1.5 0 000 3z" />
             </svg>
-            Shopping Cart ({{ count($this->getCartItems()) }})
+            Panier ({{ count($this->getCartItems()) }})
         </h3>
     </div>
 
     @if($this->getCartItems() && count($this->getCartItems()) > 0)
         <!-- Cart Items -->
-        <div class="max-h-[60vh] overflow-y-auto p-4 space-y-4">
+        <div class="flex-1 overflow-y-auto p-4 space-y-4">
             @foreach($this->getCartItems() as $key => $item)
                 <div class="flex gap-4 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
                     <!-- Product Image -->
@@ -87,16 +87,8 @@
         </div>
 
         <!-- Cart Footer -->
-        <div class="border-t border-gray-200 bg-gray-50 p-4">
+        <div class="border-t border-gray-200 bg-gray-50 p-4 flex-shrink-0">
             <div class="space-y-2">
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Subtotal:</span>
-                    <span class="font-medium">{{ number_format($this->getCartSubtotal(), 2) }} DT</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-gray-600">Shipping:</span>
-                    <span class="font-medium">{{ number_format($this->getShippingCost(), 2) }} DT</span>
-                </div>
                 <div class="flex justify-between pt-2 border-t border-gray-200">
                     <span class="font-bold text-gray-800">Total:</span>
                     <span class="font-bold text-lg text-[#d4af37]">{{ number_format($this->getCartTotal(), 2) }} DT</span>
@@ -106,15 +98,11 @@
             <div class="mt-4 grid grid-cols-1 gap-3">
                 <a href="{{ route('cart') }}" 
                    class="flex items-center justify-center px-4 py-2 bg-[#d4af37] text-white rounded-md hover:bg-[#b8972e] transition font-medium">
-                    View Cart
+                    Confirmer votre commande
                 </a>
                 <button wire:click="clearCart"
                         class="flex items-center justify-center px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition font-medium">
-                    Delete All
-                </button>
-                <button @click="$dispatch('closeCart')"
-                        class="flex items-center justify-center px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700 transition font-medium">
-                    Continue Shopping
+                    Supprimer Tous
                 </button>
             </div>
         </div>

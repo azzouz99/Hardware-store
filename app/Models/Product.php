@@ -23,10 +23,24 @@ class Product extends Model
     {
         return $this->belongsTo(\App\Models\SubsubCategory::class, 'subsub_category_id');
     }
+
     public function images()
     {
         return $this->belongsToMany(Image::class, 'image_product')->withTimestamps();
     }
+
+    public function priceHistory()
+    {
+        return $this->hasMany(PriceHistory::class);
+    }
+
+    public function getCurrentPrice()
+    {
+        return $this->priceHistory()
+            ->whereNull('effective_to')
+            ->first();
+    }
+
     public function scopePromoted($query)
     {
         return $query->where('promotion', true)

@@ -10,12 +10,7 @@ class CartDropdown extends Component
 
     public function incrementQuantity($productId)
     {
-        $cart = session()->get('cart', []);
-        if (isset($cart[$productId])) {
-            $cart[$productId]['quantity']++;
-            session()->put('cart', $cart);
-            $this->dispatch('cart-updated');
-        }
+        $this->dispatch('add-to-cart', $productId, 1);
     }
 
     public function decrementQuantity($productId)
@@ -23,17 +18,6 @@ class CartDropdown extends Component
         $cart = session()->get('cart', []);
         if (isset($cart[$productId]) && $cart[$productId]['quantity'] > 1) {
             $cart[$productId]['quantity']--;
-            session()->put('cart', $cart);
-            $this->dispatch('cart-updated');
-        }
-    }
-
-    public function updateCartItemQuantity($productId, $quantity)
-    {
-        $cart = session()->get('cart', []);
-        if (isset($cart[$productId])) {
-            $quantity = max(1, intval($quantity));
-            $cart[$productId]['quantity'] = $quantity;
             session()->put('cart', $cart);
             $this->dispatch('cart-updated');
         }
@@ -64,10 +48,7 @@ class CartDropdown extends Component
     {
         $cart = $this->getCartItems();
         return collect($cart)->sum(function ($item) {
-            $price = isset($item['promotion_price']) && $item['promotion_price'] < $item['price'] 
-                ? $item['promotion_price'] 
-                : $item['price'];
-            return $price * $item['quantity'];
+            return $item['price'] * $item['quantity'];
         });
     }
 
