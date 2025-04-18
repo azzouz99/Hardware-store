@@ -28,9 +28,9 @@
             <!-- Dropdown Menu -->
             <div id="userMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg hidden">
                 <div class="py-2">
-                    <a href="{{ route('products.create') }}" class="block px-4 py-2 text-sm text-black hover:bg-gradient-to-r hover:from-[#6a0a0a] hover:to-[#8B0000] hover:text-white">Profile</a>
-                    <a href="{{ route('products.create') }}" class="block px-4 py-2 text-sm text-black hover:bg-gradient-to-r hover:from-[#6a0a0a] hover:to-[#8B0000] hover:text-white">Settings</a>
-                    <form action="{{ route('products.create') }}" method="POST">
+                    <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-gradient-to-r hover:from-[#6a0a0a] hover:to-[#8B0000] hover:text-white">Profile</a>
+                    <a href="#" class="block px-4 py-2 text-sm text-black hover:bg-gradient-to-r hover:from-[#6a0a0a] hover:to-[#8B0000] hover:text-white">Settings</a>
+                    <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="w-full text-left px-4 py-2 text-sm text-black hover:bg-gradient-to-r hover:from-[#6a0a0a] hover:to-[#8B0000] hover:text-white">Logout</button>
                     </form>
