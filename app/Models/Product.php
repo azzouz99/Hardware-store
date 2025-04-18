@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Product extends Model
 {
@@ -14,9 +15,8 @@ class Product extends Model
         'status',
         'promotion',
         'promotion_value',
-        'subsub_category_id',  // Ensure this field exists in your migration
+        'subsub_category_id',
         'price',
-        // If you store images in a JSON field, include 'images'
     ];
 
     public function subsubCategory()
@@ -27,6 +27,13 @@ class Product extends Model
     public function images()
     {
         return $this->belongsToMany(Image::class, 'image_product')->withTimestamps();
+    }
+
+    public function orders(): BelongsToMany
+    {
+        return $this->belongsToMany(Order::class)
+                    ->withPivot(['quantity', 'price_at_time', 'promotion_price_at_time', 'subtotal'])
+                    ->withTimestamps();
     }
 
     public function priceHistory()
@@ -43,8 +50,7 @@ class Product extends Model
 
     public function scopePromoted($query)
     {
-        return $query->where('promotion', true)
-                    ->with('images'); // Eager load images
+        return $query->where('promotion', true);
     }
 }
 

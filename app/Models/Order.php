@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Order extends Model
 {
@@ -21,8 +21,10 @@ class Order extends Model
         'status'
     ];
 
-    public function items(): HasMany
+    public function products(): BelongsToMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->belongsToMany(Product::class)
+                    ->withPivot(['quantity', 'price_at_time', 'promotion_price_at_time', 'subtotal'])
+                    ->withTimestamps();
     }
 }

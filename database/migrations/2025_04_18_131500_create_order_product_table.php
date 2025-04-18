@@ -6,28 +6,22 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
-    public function up(): void
+    public function up()
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create('order_product', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained();
-            $table->string('product_name');
-            $table->decimal('price', 10, 2);
             $table->integer('quantity');
+            $table->decimal('price_at_time', 10, 2);
+            $table->decimal('promotion_price_at_time', 10, 2)->nullable();
             $table->decimal('subtotal', 10, 2);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
-    public function down(): void
+    public function down()
     {
-        Schema::dropIfExists('order_items');
+        Schema::dropIfExists('order_product');
     }
 };

@@ -9,20 +9,18 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('unite');         // Unit as a string (e.g., "kg", "piece", etc.)
-            $table->string('reference');     // Reference code
-            $table->json('images')->nullable(); // Multiple images stored as JSON (an array of image paths)
+            $table->string('unite');
+            $table->string('reference');
             $table->integer('quantity')->default(0);
-            // Status as an enum (can be 'Disponible' or 'sur commande')
+            $table->decimal('price', 10, 2)->default(0);
             $table->enum('status', ['Disponible', 'sur commande'])->default('Disponible');
-            // Promotion flag (true if the product is on promotion)
             $table->boolean('promotion')->default(false);
-            $table->integer('promotion_value')->default(0);
+            $table->decimal('promotion_price', 10, 2)->nullable();
             $table->timestamps();
         });
     }

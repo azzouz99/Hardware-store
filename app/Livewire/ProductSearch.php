@@ -80,16 +80,16 @@ class ProductSearch extends Component
             $cart[$productId]['quantity']++;
         } else {
             $cart[$productId] = [
+                'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
+                'promotion_price' => $product->promotion ? $product->promotion_value : null,
                 'image' => $product->images->first()?->image_path,
                 'quantity' => 1,
             ];
         }
     
         session()->put('cart', $cart);
-    
-        // Optional: notify other components
         $this->dispatch('cart-updated');
     }
     

@@ -26,6 +26,18 @@ return new class extends Migration
             $table->string('status')->default('pending');
             $table->timestamps();
         });
+
+        Schema::create('order_items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('order_id')->constrained()->onDelete('cascade');
+            $table->foreignId('product_id')->constrained();
+            $table->string('product_name');
+            $table->decimal('price', 10, 2);
+            $table->decimal('promotion_price', 10, 2)->nullable();
+            $table->integer('quantity');
+            $table->decimal('subtotal', 10, 2);
+            $table->timestamps();
+        });
     }
 
     /**
@@ -33,6 +45,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('order_items');
         Schema::dropIfExists('orders');
     }
 };

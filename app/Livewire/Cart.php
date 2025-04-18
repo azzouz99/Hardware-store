@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class Cart extends Component
 {
@@ -57,6 +58,7 @@ class Cart extends Component
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
+                'promotion_price' => $product->promotion ? $product->promotion_value : null,
                 'quantity' => $quantity,
                 'image' => $product->images->first()?->image_path,
             ];
@@ -68,8 +70,15 @@ class Cart extends Component
         // Emit event to update cart counter and dropdown
         $this->dispatch('cart-updated');
         
-        // Flash success message
-        session()->flash('message', 'Product added to cart!');
+        // Show success message
+        $this->dispatch('swal', [
+            'icon' => 'success',
+            'title' => 'Ajouté!',
+            'text' => 'Produit ajouté au panier!',
+            'timer' => 1500,
+            'showConfirmButton' => false,
+            'position' => 'top-end'
+        ]);
     }
 
     public function incrementQuantity($productId)
@@ -145,7 +154,7 @@ class Cart extends Component
 
         try {
             DB::beginTransaction();
-
+            
             // Create the order
             $order = Order::create([
                 'first_name' => $this->firstName,
@@ -161,32 +170,48 @@ class Cart extends Component
                 'status' => 'pending'
             ]);
 
-            // Create order items
-            foreach ($this->getCartItems() as $item) {
-                OrderItem::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item['id'],
-                    'product_name' => $item['name'],
-                    'price' => $item['promotion_price'] ?? $item['price'],
+            // Attach products to order
+            foreach ($this->getCartItems() as $productId => $item) {
+                $price = isset($item['promotion_price']) && $item['promotion_price'] < $item['price'] 
+                    ? $item['promotion_price'] 
+                    : $item['price'];
+                    
+                $order->products()->attach($productId, [
                     'quantity' => $item['quantity'],
-                    'subtotal' => ($item['promotion_price'] ?? $item['price']) * $item['quantity']
+                    'price_at_time' => $item['price'],
+                    'promotion_price_at_time' => $item['promotion_price'] ?? null,
+                    'subtotal' => $price * $item['quantity']
                 ]);
             }
 
             DB::commit();
-
+            
             // Clear the cart
             $this->clearCart();
 
-            // Show success message
-            session()->flash('message', 'Votre commande a été placée avec succès!');
-
-            // Redirect to success page or home
-            return redirect()->route('home')->with('success', 'Commande effectuée avec succès');
+            // Show success message and redirect
+            $this->dispatch('swal', [
+                'icon' => 'success',
+                'title' => 'Commande Réussie!',
+                'text' => 'Votre commande a été placée avec succès!',
+                'timer' => 2000,
+                'showConfirmButton' => false,
+                'position' => 'center',
+                'callback' => 'redirect',
+                'redirectUrl' => route('home')
+            ]);
 
         } catch (\Exception $e) {
             DB::rollback();
-            session()->flash('error', 'Une erreur est survenue lors de la création de votre commande. Veuillez réessayer.');
+            Log::error('Order placement failed: ' . $e->getMessage());
+            
+            $this->dispatch('swal', [
+                'icon' => 'error',
+                'title' => 'Erreur!',
+                'text' => 'Une erreur est survenue lors du traitement de votre commande.',
+                'position' => 'center',
+                'showConfirmButton' => true
+            ]);
         }
     }
 

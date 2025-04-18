@@ -31,6 +31,7 @@ class HomePage extends Component
                 'id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
+                'promotion_price' => $product->promotion ? $product->promotion_value : null,
                 'quantity' => 1,
                 'image' => $product->images->first()?->image_path,
             ];

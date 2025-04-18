@@ -9,6 +9,8 @@
    
     @vite(['resources/css/app.css']) <!-- CSS only here -->
     
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="bg-gray-100 text-gray-900">
 
@@ -36,6 +38,30 @@
 
 @livewireScripts
 @vite(['resources/js/app.js']) 
+
+<script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('swal', (data) => {
+                console.log('SweetAlert event received:', data);
+                
+                const options = {
+                    icon: data[0].icon || 'success',
+                    title: data[0].title || '',
+                    text: data[0].text || '',
+                    timer: data[0].timer || undefined,
+                    showConfirmButton: data[0].showConfirmButton !== false,
+                    position: data[0].position || 'center',
+                };
+
+                Swal.fire(options).then((result) => {
+                    console.log('SweetAlert shown successfully');
+                    if (data[0].callback === 'redirect' && data[0].redirectUrl) {
+                        window.location.href = data[0].redirectUrl;
+                    }
+                });
+            });
+        });
+    </script>
 
 </body>
 </html>

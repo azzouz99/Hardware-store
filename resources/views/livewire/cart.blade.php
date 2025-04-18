@@ -8,13 +8,28 @@
                 <div class="lg:w-2/3 bg-white rounded-lg shadow-sm p-6">
                     <h2 class="text-lg font-bold text-gray-900 mb-6">Informations de livraison</h2>
                     
-                    <form wire:submit.prevent="placeOrder" class="space-y-6">
+                    <!-- Display Success Message -->
+                    @if (session()->has('message'))
+                        <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+                            {{ session('message') }}
+                        </div>
+                    @endif
+
+                    <!-- Display Error Message -->
+                    @if (session()->has('error'))
+                        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+                    
+                    <form wire:submit="placeOrder" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Name -->
                             <div>
                                 <label for="firstName" class="block text-sm font-medium text-gray-700">Prénom</label>
                                 <input type="text" id="firstName" wire:model="firstName" 
                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring-[#d4af37]">
+                                @error('firstName') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Last Name -->
@@ -22,6 +37,7 @@
                                 <label for="lastName" class="block text-sm font-medium text-gray-700">Nom</label>
                                 <input type="text" id="lastName" wire:model="lastName"
                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring-[#d4af37]">
+                                @error('lastName') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Email -->
@@ -29,6 +45,7 @@
                                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                                 <input type="email" id="email" wire:model="email"
                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring-[#d4af37]">
+                                @error('email') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Phone -->
@@ -36,6 +53,7 @@
                                 <label for="phone" class="block text-sm font-medium text-gray-700">Téléphone</label>
                                 <input type="tel" id="phone" wire:model="phone"
                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring-[#d4af37]">
+                                @error('phone') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Government -->
@@ -49,6 +67,7 @@
                                     <option value="Ben Arous">Ben Arous</option>
                                     <!-- Add other governorates -->
                                 </select>
+                                @error('government') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Address -->
@@ -56,6 +75,7 @@
                                 <label for="address" class="block text-sm font-medium text-gray-700">Adresse</label>
                                 <input type="text" id="address" wire:model="address"
                                        class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring-[#d4af37]">
+                                @error('address') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                             </div>
 
                             <!-- Note -->
@@ -115,7 +135,7 @@
                                 <div class="border-t border-gray-200 pt-4 mt-4">
                                     <div class="flex justify-between">
                                         <span class="text-lg font-bold text-gray-900">Total</span>
-                                        <span class="text-xl font-bold text-[#d4af37]">{{ number_format($this->getCartSubtotal() + 13, 2) }} DT</span>
+                                        <span class="text-xl font-bold text-[#d4af37]">{{ number_format($this->getCartTotal(), 2) }} DT</span>
                                     </div>
                                 </div>
                             </div>
@@ -139,3 +159,33 @@
         @endif
     </div>
 </div>
+
+@push('scripts')
+<script>
+    document.addEventListener('livewire:initialized', () => {
+        console.log('Livewire initialized, setting up SweetAlert listener');
+        
+        Livewire.on('swal', (data) => {
+            console.log('SweetAlert event received:', data);
+            
+            try {
+                Swal.fire({
+                    icon: data[0].icon,
+                    title: data[0].title,
+                    text: data[0].text,
+                    timer: data[0].timer || null,
+                    showConfirmButton: data[0].showConfirmButton !== false,
+                    position: data[0].position || 'center',
+                }).then((result) => {
+                    console.log('SweetAlert shown successfully');
+                    if (data[0].callback === 'redirect' && data[0].redirectUrl) {
+                        window.location.href = data[0].redirectUrl;
+                    }
+                });
+            } catch (error) {
+                console.error('Error showing SweetAlert:', error);
+            }
+        });
+    });
+</script>
+@endpush
