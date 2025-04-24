@@ -1,23 +1,100 @@
 <div>
+<!-- Hero Carousel Section -->
+<div x-data="{
+    activeSlide: 0,
+    slides: [
+        { image: '{{ asset('images/quincaillerie1.png') }}', title: 'Bienvenue chez Nouichi Store', subtitle: 'Votre partenaire en quincaillerie professionnelle' },
+        { image: '{{ asset('images/quincaillerie2.PNG') }}', title: 'Qualité et Expertise', subtitle: 'Une large gamme d\'outils et matériaux' },
+        { image: '{{ asset('images/quincaillerie3.png') }}', title: 'Service Professionnel', subtitle: 'Des conseils d\'experts à votre service' }
+    ],
+    init() {
+        setInterval(() => {
+            this.activeSlide = (this.activeSlide + 1) % 3;
+        }, 5000);
+    }
+}" class="relative overflow-hidden mb-8 h-[400px] md:h-[500px]">
+    <!-- Slides -->
+    <template x-for="(slide, index) in slides" :key="index">
+        <div x-show="activeSlide === index"
+             x-transition:enter="transition duration-500 transform"
+             x-transition:enter-start="translate-x-full"
+             x-transition:enter-end="translate-x-0"
+             x-transition:leave="transition duration-500 transform"
+             x-transition:leave-start="translate-x-0"
+             x-transition:leave-end="-translate-x-full"
+             class="absolute inset-0">
+            <div class="absolute inset-0 bg-black opacity-40"></div>
+            <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover">
+            <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-4">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4" x-text="slide.title"></h2>
+                <p class="text-xl md:text-2xl" x-text="slide.subtitle"></p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Navigation buttons -->
+    <button @click="activeSlide = (activeSlide - 1 + 3) % 3" class="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+        </svg>
+    </button>
+    <button @click="activeSlide = (activeSlide + 1) % 3" class="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
+
+    <!-- Slide indicators -->
+    <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
+        <template x-for="(slide, index) in slides" :key="index">
+            <button @click="activeSlide = index" 
+                    :class="{'bg-white': activeSlide === index, 'bg-white/50': activeSlide !== index}"
+                    class="w-3 h-3 rounded-full transition-colors duration-300">
+            </button>
+        </template>
+    </div>
+</div>
+
 <!-- Section 1: Grid of All Categories -->
-<section class="py-12 bg-gray-100">
+<section class="py-12">
   <div class="container mx-auto px-4">
-    <!-- Header with Underline -->
-    <div class="text-center mb-12">
-      <h2 class="text-2xl font-bold text-gray-800">NOS CATÉGORIES</h2>
-      <div class="mt-2 w-24 mx-auto border-b-4 border-[#d4af37]"></div>
+    <!-- Header with Dark Gradient -->
+    <div class="relative bg-gradient-to-r from-[#2d2d2d] to-[#3f3f3f] p-3 md:p-5 mb-8 rounded-lg md:rounded-xl shadow-lg md:shadow-2xl overflow-hidden">
+      <div class="absolute inset-0 opacity-20" style="background-image: radial-gradient(circle at 25% 50%, white 0.5px, transparent 1px); background-size: 15px 15px;"></div>
+      <div class="absolute right-0 top-0 h-full w-16 md:w-24 bg-gradient-to-l from-[#d4af37]/10 to-transparent"></div>
+      
+      <div class="relative z-10 flex items-center space-x-2 md:space-x-4">
+        <div class="h-8 w-0.5 md:h-10 md:w-1 bg-[#d4af37] rounded-full"></div>
+        <h2 class="text-xl md:text-2xl font-bold text-white uppercase tracking-tight md:tracking-wider">
+          <span class="text-[#d4af37]">NOS</span> CATÉGORIES
+        </h2>
+      </div>
+      
+      <div class="absolute bottom-0 left-0 right-0 h-0.5 md:h-1 bg-gradient-to-r from-[#d4af37] via-[#d4af37]/50 to-transparent"></div>
     </div>
 
     <!-- Category Grid: 5 per row on large screens -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
       @foreach($categories as $cat)
-        <a href="{{ route('category.index', ['category' => $cat->id]) }}" class="block transform transition duration-300 hover:scale-95">
-          <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4 hover:shadow-xl transition-shadow duration-300 hover:border-[#d4af37]">
-            <div class="flex justify-center pt-6">
-              <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" class="w-16 h-16">
+        <a href="{{ route('category.index', ['category' => $cat->id]) }}" 
+           class="group block transform transition duration-300 hover:-translate-y-1">
+          <div class="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl shadow-md p-6 relative overflow-hidden">
+            <!-- Decorative elements -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#d4af37]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d4af37] to-transparent transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300"></div>
+            
+            <!-- Icon container -->
+            <div class="relative flex justify-center items-center mb-4">
+              <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center group-hover:shadow-lg transition-shadow duration-300">
+                <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" class="w-8 h-8 object-contain">
+              </div>
             </div>
-            <div class="p-4 text-center">
-              <h3 class="text-base font-semibold text-black truncate">{{ $cat->name }}</h3>
+            
+            <!-- Category name -->
+            <div class="text-center relative">
+              <h3 class="text-base font-semibold text-gray-800 group-hover:text-[#d4af37] transition-colors duration-300">
+                {{ $cat->name }}
+              </h3>
             </div>
           </div>
         </a>

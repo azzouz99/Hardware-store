@@ -16,30 +16,24 @@
 
     {{-- 🔼 Header --}}
     <header class="sticky top-0 z-50 bg-white shadow">
-    <x-header />
+        <x-header />
     </header>
 
     {{-- 📦 Page Content --}}
     <main class="container mx-auto p-6">
+        {{ $slot ?? '' }}
         @yield('content')
-        
     </main>
 
     {{-- 🔽 Footer --}}
-    <footer class="bg-white shadow p-4 mt-12">
-    <x-footer />
+    <footer>
+        <x-footer />
     </footer>
-<!-- jQuery -->
 
+    @livewireScripts
+    @vite(['resources/js/app.js']) 
 
-<!-- Bootstrap JS (with Popper) -->
-
-
-
-@livewireScripts
-@vite(['resources/js/app.js']) 
-
-<script>
+    <script>
         document.addEventListener('livewire:initialized', () => {
             Livewire.on('swal', (data) => {
                 console.log('SweetAlert event received:', data);
@@ -62,6 +56,5 @@
             });
         });
     </script>
-
 </body>
 </html>
