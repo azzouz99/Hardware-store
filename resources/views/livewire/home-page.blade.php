@@ -13,6 +13,9 @@
         }, 5000);
     }
 }" class="relative overflow-hidden mb-8 h-[400px] md:h-[500px]">
+    <!-- Preload the first image -->
+    <link rel="preload" as="image" href="{{ asset('images/quincaillerie1.png') }}" fetchpriority="high">
+    
     <!-- Slides -->
     <template x-for="(slide, index) in slides" :key="index">
         <div x-show="activeSlide === index"
@@ -24,7 +27,14 @@
              x-transition:leave-end="-translate-x-full"
              class="absolute inset-0">
             <div class="absolute inset-0 bg-black opacity-40"></div>
-            <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover">
+            <img :src="slide.image" 
+                 :alt="slide.title" 
+                 class="w-full h-full object-cover"
+                 width="1920"
+                 height="1080"
+                 :loading="index === 0 ? 'eager' : 'lazy'"
+                 :fetchpriority="index === 0 ? 'high' : 'low'"
+                 decoding="async">
             <div class="absolute inset-0 flex flex-col justify-center items-center text-center text-white p-4">
                 <h2 class="text-4xl md:text-5xl font-bold mb-4" x-text="slide.title"></h2>
                 <p class="text-xl md:text-2xl" x-text="slide.subtitle"></p>
@@ -86,7 +96,12 @@
             <!-- Icon container -->
             <div class="relative flex justify-center items-center mb-4">
               <div class="w-16 h-16 rounded-full bg-white shadow-md flex items-center justify-center group-hover:shadow-lg transition-shadow duration-300">
-                <img src="{{ asset($cat->icon) }}" alt="{{ $cat->name }}" class="w-8 h-8 object-contain">
+                <img src="{{ asset($cat->icon) }}" 
+                     alt="{{ $cat->name }}" 
+                     class="w-8 h-8 object-contain"
+                     loading="lazy"
+                     width="32"
+                     height="32">
               </div>
             </div>
             
@@ -143,15 +158,23 @@
                 </div>
 
                 <div class="w-full aspect-square overflow-hidden bg-gray-100">
-                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
-                        alt="{{ $product->name }}"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    <a href="{{ route('products.show', $product) }}" class="block">
+                        <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                            alt="{{ $product->name }}"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            width="400"
+                            height="400"
+                            loading="lazy"
+                            decoding="async">
+                    </a>
                 </div>
 
                 <div class="p-2 flex flex-col flex-grow">
-                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
-                        {{ $product->name }}
-                    </h3>
+                    <a href="{{ route('products.show', $product) }}" class="block">
+                        <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow hover:text-[#d4af37] transition-colors">
+                            {{ $product->name }}
+                        </h3>
+                    </a>
 
                     <div class="flex items-center justify-between mt-2">
                         @if($product->promotion)
@@ -309,15 +332,23 @@
                 </div>
 
                 <div class="w-full aspect-square overflow-hidden bg-gray-100">
-                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
-                        alt="{{ $product->name }}"
-                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                    <a href="{{ route('products.show', $product) }}" class="block">
+                        <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                            alt="{{ $product->name }}"
+                            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                            width="400"
+                            height="400"
+                            loading="lazy"
+                            decoding="async">
+                    </a>
                 </div>
 
                 <div class="p-2 flex flex-col flex-grow">
-                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
-                        {{ $product->name }}
-                    </h3>
+                    <a href="{{ route('products.show', $product) }}" class="block">
+                        <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow hover:text-[#d4af37] transition-colors">
+                            {{ $product->name }}
+                        </h3>
+                    </a>
 
                     <div class="flex items-center justify-between mt-2">
                         @if($product->promotion)

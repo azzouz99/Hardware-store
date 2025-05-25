@@ -43,7 +43,7 @@
 
                 <!-- Right: Icons -->
                 <div class="flex items-center space-x-3 md:space-x-6">
-                    <a href="/account" class="text-gray-600 hover:text-[#d4af37] transition-colors group relative p-2">
+                    <a href="/profile" class="text-gray-600 hover:text-[#d4af37] transition-colors group relative p-2">
                         <i class="fa fa-user fa-lg"></i>
                         <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Account</span>
                     </a>

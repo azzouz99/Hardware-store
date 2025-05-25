@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class Cart extends Component
 {
@@ -156,7 +157,7 @@ class Cart extends Component
             DB::beginTransaction();
             
             // Create the order
-            $order = Order::create([
+            $orderData = [
                 'first_name' => $this->firstName,
                 'last_name' => $this->lastName,
                 'email' => $this->email,
@@ -168,7 +169,14 @@ class Cart extends Component
                 'shipping_cost' => $this->getShippingCost(),
                 'total' => $this->getCartTotal(),
                 'status' => 'pending'
-            ]);
+            ];
+
+            // If user is authenticated, associate the order with them
+            // if (auth()->check()) {
+            //     $orderData['user_id'] = auth()->id();
+            // }
+
+            $order = Order::create($orderData);
 
             // Attach products to order
             foreach ($this->getCartItems() as $productId => $item) {

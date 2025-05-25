@@ -12,11 +12,13 @@ use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
-
     public function create()
     {
         return view('admin.products.create');
     }
 
-    
+    public function show(Product $product)
+    {
+        return view('products.show', compact('product'));
+    }
 }

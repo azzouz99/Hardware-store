@@ -45,7 +45,7 @@
                 <!-- Quantity -->
                 <div>
                     <label for="quantity" class="block text-sm font-medium text-gray-700">Quantity</label>
-                    <input type="number" wire:model.blur="quantity" id="quantity" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d4af37] focus:border-[#d4af37] sm:text-sm" required>
+                    <input type="number" wire:model.blur="quantity" id="quantity" class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d4af37] focus:border-[#d4af37] sm:text-sm" >
                     @error('quantity') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
                 </div>
             </div>
@@ -177,9 +177,45 @@
             </div>
             <!-- New Images -->
             <div>
-                <label for="images" class="block text-sm font-medium text-gray-700">Upload New Images</label>
-                <input type="file" wire:model="images" id="images" multiple class="mt-1 w-full border-gray-300 rounded-md shadow-sm focus:ring-[#d4af37] focus:border-[#d4af37] sm:text-sm p-2">
-                @error('images.*') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
+                <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Upload New Images (You can select multiple images)</label>
+                <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md hover:border-[#d4af37] transition-colors duration-200">
+                    <div class="space-y-1 text-center">
+                        <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                            <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <div class="flex text-sm text-gray-600">
+                            <label for="images" class="relative cursor-pointer bg-white rounded-md font-medium text-[#d4af37] hover:text-[#b38f1d] focus-within:outline-none">
+                                <span>Select multiple files</span>
+                                <input type="file" wire:model="images" id="images" multiple accept="image/*" class="sr-only">
+                            </label>
+                            <p class="pl-1">or drag and drop</p>
+                        </div>
+                        <p class="text-xs text-gray-500">PNG, JPG, GIF up to 10MB each</p>
+                    </div>
+                </div>
+                @error('images.*') 
+                    <span class="text-red-600 text-sm block mt-2">{{ $message }}</span> 
+                @enderror
+                
+                <!-- Preview selected images -->
+                @if ($images)
+                    <div class="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                        @foreach($images as $image)
+                            @if($image && method_exists($image, 'temporaryUrl'))
+                                <div class="relative group">
+                                    <img src="{{ $image->temporaryUrl() }}" alt="Preview" class="h-24 w-24 object-cover rounded-lg">
+                                    <div class="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                                        <button type="button" wire:click="removeUploadedImage({{ $loop->index }})" class="text-white hover:text-red-500">
+                                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
 

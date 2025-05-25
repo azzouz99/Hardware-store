@@ -96,16 +96,20 @@
 
             <!-- Product Image -->
             <div class="w-full aspect-square overflow-hidden bg-gray-100">
-                <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
-                    alt="{{ $product->name }}"
-                    class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                <a href="{{ route('products.show', $product) }}" class="block">
+                    <img src="{{ asset($product->images->first()->image_path ?? 'images/no-image.png') }}" 
+                        alt="{{ $product->name }}"
+                        class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105">
+                </a>
             </div>
 
             <!-- Product Info -->
             <div class="p-2 flex flex-col flex-grow">
-                <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow">
-                    {{ $product->name }}
-                </h3>
+                <a href="{{ route('products.show', $product) }}" class="block">
+                    <h3 class="text-sm font-medium text-gray-800 mb-1 line-clamp-2 flex-grow hover:text-[#d4af37] transition-colors">
+                        {{ $product->name }}
+                    </h3>
+                </a>
 
                 <!-- Price -->
                 <div class="flex items-center justify-between mt-2">
