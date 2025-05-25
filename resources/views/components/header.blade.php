@@ -3,13 +3,14 @@
     <div class="bg-[#2d2d2d] text-white px-4 py-2 text-sm hidden md:block">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
-                <span><i class="fa fa-phone mr-2"></i>+216 XX XXX XXX</span>
+                <span>Bienvenue dans notre boutique Nouichi :</span>
+                <span><i class="fa fa-phone mr-2"></i>+216 58 092 904</span>
                 <span><i class="fa fa-envelope mr-2"></i>contact@nouichistore.com</span>
             </div>
-            <div class="flex items-center space-x-4">
+            <!-- <div class="flex items-center space-x-4">
                 <a href="/shipping" class="hover:text-[#d4af37] transition-colors">Shipping</a>
                 <a href="/contact" class="hover:text-[#d4af37] transition-colors">Contact</a>
-            </div>
+            </div> -->
         </div>
     </div>
 
@@ -29,16 +30,7 @@
 
                 <!-- Center: Search Bar -->
                 <div class="flex-1 max-w-2xl hidden md:block">
-                    <form action="/search" method="GET" class="relative">
-                        <input type="text" 
-                               name="query" 
-                               placeholder="Recherche des produits..."
-                               class="w-full border border-gray-200 rounded-full py-2.5 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:border-transparent transition-shadow"
-                        >
-                        <button type="submit" class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500 hover:text-[#d4af37] transition-colors">
-                            <i class="fa fa-search"></i>
-                        </button>
-                    </form>
+                    <livewire:search-bar />
                 </div>
 
                 <!-- Right: Icons -->
@@ -65,16 +57,7 @@
 
             <!-- Mobile Search (visible on mobile only) -->
             <div class="mt-4 md:hidden">
-                <form action="/search" method="GET" class="relative">
-                    <input type="text" 
-                           name="query" 
-                           placeholder="Recherche des produits..."
-                           class="w-full border border-gray-200 rounded-full py-2 pl-10 pr-4 focus:outline-none focus:ring-2 focus:ring-[#d4af37] focus:border-transparent"
-                    >
-                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-500">
-                        <i class="fa fa-search"></i>
-                    </span>
-                </form>
+                <livewire:search-bar />
             </div>
         </div>
     </div>

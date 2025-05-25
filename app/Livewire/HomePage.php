@@ -15,8 +15,15 @@ class HomePage extends Component
 
     public function mount()
     {
-        $this->categories = Category::with('subcategories.subsubcategories', 'subcategories.products')->get();
-        $this->promotedProducts = Product::promoted()->get();
+        // Get all categories with 4 random subcategories, each containing 8 random products
+        $this->categories = Category::with(['subcategories' => function($query) {
+            $query->inRandomOrder()->take(4)->with(['products' => function($query) {
+                $query->inRandomOrder()->take(8);
+            }]);
+        }])->get();
+        
+        // Get promoted products
+        $this->promotedProducts = Product::promoted()->inRandomOrder()->take(10)->get();
     }
 
     public function addToCart($productId)
