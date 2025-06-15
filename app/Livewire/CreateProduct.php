@@ -8,7 +8,6 @@ use App\Models\Category;
 use App\Models\Image;
 use App\Models\Product;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
 
 class CreateProduct extends Component
 {
@@ -45,7 +44,7 @@ class CreateProduct extends Component
             'unite' => 'required|string|max:50',
             'price' => 'required|numeric|min:0',
             'reference' => 'required|string|max:100',
-            'quantity' => 'nullable|integer|min:0',
+            'quantity' => 'required|integer|min:0',
             'status' => 'required|in:Disponible,sur commande',
             'promotion' => 'required|in:0,1',
             'promotion_value' => 'nullable|numeric|min:0|max:100',
@@ -73,87 +72,62 @@ class CreateProduct extends Component
         }
     }
 
-/**
- * Save the product
- */
-public function save()
-{
-    $validated = $this->validate();
+    /**
+     * Save the product
+     */
+    public function save()
+    {
+        $validated = $this->validate();
 
-    try {
-        // Create product
-        $product = Product::create([
-            'name' => $this->name,
-            'description' => $this->description,
-            'unite' => $this->unite,
-            'price' => $this->price,
-            'reference' => $this->reference,
-            'quantity' => $this->quantity,
-            'status' => $this->status,
-            'promotion' => $this->promotion,
-            'promotion_value' => $this->promotion_value,
-            'subsub_category_id' => $this->subsub_category_id,
-        ]);
+        try {
+            // Create product
+            $product = Product::create([
+                'name' => $this->name,
+                'description' => $this->description,
+                'unite' => $this->unite,
+                'price' => $this->price,
+                'reference' => $this->reference,
+                'quantity' => $this->quantity,
+                'status' => $this->status,
+                'promotion' => $this->promotion,
+                'promotion_value' => $this->promotion_value,
+                'subsub_category_id' => $this->subsub_category_id,
+            ]);
 
-        // Log creation
-        Log::info("Product created with ID: {$product->id}");
+            // Log creation (optional, matches your original controller)
+            Log::info("Product created with ID: {$product->id}");
 
-        // Attach existing images
-        if (!empty($this->existing_images)) {
-            $product->images()->attach($this->existing_images);
-            Log::info("Attached existing images to product ID {$product->id}: " . implode(', ', $this->existing_images));
-        }
+            // Attach existing images
+            if (!empty($this->existing_images)) {
+                $product->images()->attach($this->existing_images);
+                Log::info("Attached existing images to product ID {$product->id}: " . implode(', ', $this->existing_images));
+            }
 
-        // Handle new image uploads
-        if (!empty($this->images) && is_array($this->images)) {
-            foreach ($this->images as $image) {
-                try {
-                    // Generate a unique path for the image
-                    $fileName = uniqid('product_') . '.' . $image->getClientOriginalExtension();
-                    $path = 'products/' . now()->format('Y/m') . '/' . $fileName;
-
-                    // Store the image in S3
-                    $image->storePubliclyAs('products/' . now()->format('Y/m'), $fileName, 's3');
-
-                    // Create the full S3 URL
-                    $s3Url = config('filesystems.disks.s3.url');
-                    $bucket = config('filesystems.disks.s3.bucket');
-                    $region = config('filesystems.disks.s3.region');
-                    
-                    // Construct the complete S3 URL
-                    $fullUrl = $s3Url 
-                        ? rtrim($s3Url, '/') . '/' . $path
-                        : "https://{$bucket}.s3.{$region}.amazonaws.com/{$path}";
-
-                    // Create image record
+            // Handle new image uploads
+            if ($this->images) {
+                foreach ($this->images as $image) {
+                    $path = $image->store('products', 'public');
                     $imageRecord = Image::create([
-                        'image_path' => $fullUrl,
+                        'image_path' => '/storage/' . $path, // Match your original controller's path
                     ]);
-
-                    // Attach the image to the product
                     $product->images()->attach($imageRecord->id);
-
-                    Log::info("Uploaded and attached new image to product ID {$product->id}: {$path}");
-                } catch (\Exception $e) {
-                    Log::error("Failed to upload image for product ID {$product->id}: {$e->getMessage()}");
-                    continue;
+                    Log::info("Attached image {$imageRecord->id} to product {$product->id}");
                 }
             }
+
+            // Set success message and reset form
+            $this->message = 'Product created successfully!';
+            $this->error = '';
+            $this->resetExcept('message');
+
+            // Optional: Redirect to products index (uncomment if desired)
+            // $this->dispatchBrowserEvent('redirect', ['url' => route('admin.products.index')]);
+        } catch (\Exception $e) {
+            $this->error = 'Failed to create product: ' . $e->getMessage();
+            $this->message = '';
+            Log::error("Failed to create product: {$e->getMessage()}");
         }
-
-        // Set success message and reset form
-        $this->message = 'Product created successfully!';
-        $this->error = '';
-        $this->resetExcept('message');
-
-        // Optional: Redirect to products index (uncomment if desired)
-        // $this->dispatchBrowserEvent('redirect', ['url' => route('admin.products.index')]);
-    } catch (\Exception $e) {
-        $this->error = 'Failed to create product: ' . $e->getMessage();
-        $this->message = '';
-        Log::error("Failed to create product: {$e->getMessage()}");
     }
-}
 
     /**
      * Render the component

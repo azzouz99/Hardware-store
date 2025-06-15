@@ -65,8 +65,8 @@
     </div>
 </div>
 
-<!-- Section 1: Grid of All Categories -->
-<section class="py-12">
+<!-- Section 1: Grid of All Categories (Hidden on mobile) -->
+<section class="hidden md:block py-12">
   <div class="container mx-auto px-4">
     <!-- Header with Dark Gradient -->
     <div class="relative bg-gradient-to-r from-[#2d2d2d] to-[#3f3f3f] p-3 md:p-5 mb-8 rounded-lg md:rounded-xl shadow-lg md:shadow-2xl overflow-hidden">

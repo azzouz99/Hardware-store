@@ -1,4 +1,4 @@
-<div x-data='{"menuOpen": false, "cartOpen": false, "categories": @json($categories ?? [])}' @click.outside="cartOpen = false">
+<div x-data='{"menuOpen": false, "cartOpen": false, "accountOpen": false, "categories": @json($categories ?? [])}' @click.outside="cartOpen = false; accountOpen = false">
     <!-- Top Bar -->
     <div class="bg-[#2d2d2d] text-white px-4 py-2 text-sm hidden md:block">
         <div class="container mx-auto flex justify-between items-center">
@@ -35,19 +35,57 @@
 
                 <!-- Right: Icons -->
                 <div class="flex items-center space-x-3 md:space-x-6">
-                    <a href="/profile" class="text-gray-600 hover:text-[#d4af37] transition-colors group relative p-2">
-                        <i class="fa fa-user fa-lg"></i>
-                        <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Account</span>
-                    </a>
+                    <!-- Account Dropdown -->
+                    <div class="relative group p-2">
+                        <button @click="accountOpen = !accountOpen" class="text-gray-600 hover:text-[#d4af37] transition-colors focus:outline-none">
+                            <i class="fa fa-user fa-lg"></i>
+                            <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Compte</span>
+                        </button>
+                        <!-- Account Dropdown Menu -->
+                        <div x-show="accountOpen" 
+                             x-transition:enter="transition ease-out duration-200"
+                             x-transition:enter-start="opacity-0 scale-95"
+                             x-transition:enter-end="opacity-100 scale-100"
+                             x-transition:leave="transition ease-in duration-75"
+                             x-transition:leave-start="opacity-100 scale-100"
+                             x-transition:leave-end="opacity-0 scale-95"
+                             class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                            <div class="py-2">
+                                @auth
+                                    <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                        <i class="fa fa-user-circle mr-2"></i>Mon Compte
+                                    </a>
+                                    <a href="{{ route('orders') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                        <i class="fa fa-shopping-bag mr-2"></i>Mes Commandes
+                                    </a>
+                                    <form method="POST" action="{{ route('logout') }}" class="border-t border-gray-100 mt-2">
+                                        @csrf
+                                        <button type="submit" class="w-full text-left px-4 py-2 text-sm text-black hover:text-[red] transition-colors">
+                                            <i class="fa fa-sign-out-alt mr-2"></i>Se déconnecter
+                                        </button>
+                                    </form>
+                                @else
+                                    <a href="{{ route('login') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                        <i class="fa fa-sign-in-alt mr-2"></i>Se Connecter
+                                    </a>
+                                    <a href="{{ route('register') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                        <i class="fa fa-user-plus mr-2"></i>Créer un compte
+                                    </a>
+                                @endauth
+                            </div>
+                        </div>
+                    </div>
+                    
                     <a href="/wishlist" class="text-gray-600 hover:text-[#d4af37] transition-colors group relative p-2">
                         <i class="fa fa-heart fa-lg"></i>
-                        <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Wishlist</span>
+                        <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Favoris</span>
                     </a>
+                    <!-- Cart Dropdown -->
                     <div class="relative group p-2">
                         <button @click="cartOpen = !cartOpen" class="text-gray-600 hover:text-[#d4af37] transition-colors focus:outline-none">
                             <livewire:cart-counter />
                         </button>
-                        <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Cart</span>
+                        <span class="hidden md:block absolute -bottom-4 left-1/2 transform -translate-x-1/2 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity">Panier</span>
                         <div x-show="cartOpen" x-cloak x-transition>
                             <livewire:cart-dropdown />
                         </div>

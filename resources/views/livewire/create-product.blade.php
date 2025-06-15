@@ -141,40 +141,7 @@
         <!-- Images -->
         <div class="bg-white p-6 rounded-lg shadow-sm">
             <h2 class="text-lg font-semibold mb-4 text-gray-700">Images</h2>
-            <!-- Existing Images -->
-            <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Select Existing Images</label>
-                @if($existingImages->isEmpty())
-                    <p class="text-gray-500 text-sm">No existing images available.</p>
-                @else
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-h-80 overflow-y-auto p-4 border border-gray-200 rounded-lg bg-gray-50">
-                        @foreach($existingImages as $image)
-                            <label class="relative block cursor-pointer">
-                                <input 
-                                    type="checkbox" 
-                                    wire:model.live="existing_images" 
-                                    value="{{ $image->id }}" 
-                                    class="absolute opacity-0 peer" 
-                                >
-                                <img 
-                                    src="{{ asset($image->image_path) }}" 
-                                    alt="Image" 
-                                    class="w-24 h-24 object-cover rounded-md border-2 transition-all duration-200 peer-checked:border-[#d4af37] peer-checked:ring-2 peer-checked:ring-[#d4af37]/50 hover:border-[#d4af37]/70"
-                                >
-                                <div class="absolute inset-0 bg-black bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 rounded-md"></div>
-                                <svg 
-                                    class="absolute top-2 right-2 w-6 h-6 text-[#d4af37] opacity-0 peer-checked:opacity-100 transition-opacity duration-200" 
-                                    fill="currentColor" 
-                                    viewBox="0 0 20 20"
-                                >
-                                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                                </svg>
-                            </label>
-                        @endforeach
-                    </div>
-                @endif
-                @error('existing_images') <span class="text-red-600 text-sm">{{ $message }}</span> @enderror
-            </div>
+
             <!-- New Images -->
             <div>
                 <label for="images" class="block text-sm font-medium text-gray-700 mb-2">Upload New Images (You can select multiple images)</label>
