@@ -17,13 +17,13 @@ class HomePage extends Component
     {
         // Get all categories with 4 random subcategories, each containing 8 random products
         $this->categories = Category::with(['subcategories' => function($query) {
-            $query->inRandomOrder()->take(4)->with(['products' => function($query) {
-                $query->inRandomOrder()->take(8);
+            $query->take(4)->with(['products' => function($query) {
+            $query->take(8);
             }]);
         }])->get();
         
         // Get promoted products
-        $this->promotedProducts = Product::promoted()->inRandomOrder()->take(10)->get();
+        $this->promotedProducts = Product::promoted()->take(10)->get();
     }
 
     public function addToCart($productId)

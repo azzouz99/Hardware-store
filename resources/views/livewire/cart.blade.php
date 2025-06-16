@@ -21,7 +21,18 @@
                             {{ session('error') }}
                         </div>
                     @endif
-                    
+
+                    @auth
+                        <div class="mb-6 p-4 bg-blue-50 text-blue-700 rounded-lg">
+                            <div class="flex items-center">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                Vos informations ont été automatiquement remplies. Vous pouvez les modifier si nécessaire.
+                            </div>
+                        </div>
+                    @endauth
+
                     <form wire:submit="placeOrder" class="space-y-6">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             <!-- Name -->

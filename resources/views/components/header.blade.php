@@ -5,7 +5,7 @@
             <div class="flex items-center space-x-4">
                 <span>Bienvenue dans notre boutique Nouichi :</span>
                 <span><i class="fa fa-phone mr-2"></i>+216 58 092 904</span>
-                <span><i class="fa fa-envelope mr-2"></i>contact@nouichistore.com</span>
+                <span><i class="fa fa-envelope mr-2"></i>Nouichi650@gmail.com</span>
             </div>
             <!-- <div class="flex items-center space-x-4">
                 <a href="/shipping" class="hover:text-[#d4af37] transition-colors">Shipping</a>
@@ -24,7 +24,7 @@
                         <i class="fa fa-bars fa-lg"></i>
                     </button>
                     <a href="/" class="flex-shrink-0">
-                        <img src="{{ asset('images/logo.svg') }}" alt="Logo" class="h-10">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo" class="h-10">
                     </a>
                 </div>
 
@@ -52,10 +52,10 @@
                              class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
                             <div class="py-2">
                                 @auth
-                                    <a href="{{ route('profile') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                    <a href="{{ route('profile.edit') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
                                         <i class="fa fa-user-circle mr-2"></i>Mon Compte
                                     </a>
-                                    <a href="{{ route('orders') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
+                                    <a href="{{ route('profile.orders') }}" class="block px-4 py-2 text-sm text-black hover:text-[#d4af37] transition-colors">
                                         <i class="fa fa-shopping-bag mr-2"></i>Mes Commandes
                                     </a>
                                     <form method="POST" action="{{ route('logout') }}" class="border-t border-gray-100 mt-2">

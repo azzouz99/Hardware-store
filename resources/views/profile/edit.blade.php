@@ -19,13 +19,28 @@
                             @csrf
                             @method('patch')
 
-                            <div>
-                                <label for="name" class="block text-sm font-medium text-gray-700">Nom complet</label>
-                                <input type="text" name="name" id="name" value="{{ old('name', $user->name) }}" 
-                                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring focus:ring-[#d4af37]/20">
-                                @error('name')
-                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                                @enderror
+                            <div class="space-y-1">
+                                
+                                <div class="grid grid-cols-2 gap-4">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Prenom</label>
+                                        <input type="text" name="first_name" id="first_name" value="{{ old('first_name', $user->first_name) }}" 
+                                            placeholder="Prénom"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring focus:ring-[#d4af37]/20">
+                                        @error('first_name')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Nom</label>
+                                        <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $user->last_name) }}"
+                                            placeholder="Nom"
+                                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#d4af37] focus:ring focus:ring-[#d4af37]/20">
+                                        @error('last_name')
+                                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
                             </div>
 
                             <div>

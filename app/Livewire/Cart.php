@@ -23,6 +23,19 @@ class Cart extends Component
     public $address = '';
     public $note = '';
 
+    public function mount()
+    {
+        if (Auth::check()) {
+            $user = Auth::user();
+            $this->firstName = $user->first_name ?? '';
+            $this->lastName = $user->last_name ?? '';
+            $this->email = $user->email ?? '';
+            $this->phone = $user->phone ?? '';
+            $this->address = $user->billing_address ?? '';
+            $this->government = $user->billing_state ?? '';
+        }
+    }
+
     protected $rules = [
         'firstName' => 'required|min:2',
         'lastName' => 'required|min:2',
@@ -168,13 +181,13 @@ class Cart extends Component
                 'subtotal' => $this->getCartSubtotal(),
                 'shipping_cost' => $this->getShippingCost(),
                 'total' => $this->getCartTotal(),
-                'status' => 'pending'
+                'status' => 'pending',
             ];
 
             // If user is authenticated, associate the order with them
-            // if (auth()->check()) {
-            //     $orderData['user_id'] = auth()->id();
-            // }
+            if (Auth::check()) {          
+                $orderData['user_id'] = Auth::user()->id;
+            } 
 
             $order = Order::create($orderData);
 

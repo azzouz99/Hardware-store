@@ -17,11 +17,11 @@
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#d4af37]" viewBox="0 0 20 20" fill="currentColor">
                             <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                         </svg>
-                        123 Rue Example, Ville, Tunisie
+                        1 Rue El Wed, Tunis, Tunisie
                     </p>
                     <div class="mt-4 w-full h-48 rounded-lg overflow-hidden shadow-lg">
-                        <iframe 
-                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3194.7375323255!2d10.1815752!3d36.8065136!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd337f5e7ef543%3A0x7c56cd0196f13fa4!2sTunis%2C%20Tunisia!5e0!3m2!1sen!2s!4v1650000000000!5m2!1sen!2s"
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3193.6081550717713!2d10.1372224!3d36.8279086!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x12fd33c69dbf3f59%3A0xb2fde144b3153485!2sQuincaillerie%20NOUICHI!5e0!3m2!1sfr!2stn!4v1750104164533!5m2!1sfr!2stn" 
                             width="100%" 
                             height="100%" 
                             style="border:0;" 
@@ -53,13 +53,13 @@
                             <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                             <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                         </svg>
-                        contact@example.com
+                        Nouichi650@gmail.com
                     </p>
                     <p class="flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-[#d4af37]" viewBox="0 0 20 20" fill="currentColor">
                             <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm3 1h6v4H7V5zm6 6H7v2h6v-2z" clip-rule="evenodd" />
                         </svg>
-                        Adresse du magasin
+                        1 Rue El Wed, Tunis, Tunisie
                     </p>
                 </div>
             </div>

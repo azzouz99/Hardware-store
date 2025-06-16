@@ -35,7 +35,7 @@
             <!-- Logo Area -->
             <div class="w-full sm:max-w-md px-6 py-2 z-10">
                 <div class="flex justify-center mb-4">
-                    <img src="{{ asset('images/logo.svg') }}" alt="Nouichi Store" class="h-16 w-auto">
+                    <img src="{{ asset('images/logo.jpeg') }}" alt="Nouichi Store" class="h-16 w-auto">
                 </div>
             </div>
 
